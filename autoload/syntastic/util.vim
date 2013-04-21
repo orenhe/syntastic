@@ -153,6 +153,10 @@ function! syntastic#util#deprecationWarn(msg)
     echomsg "syntastic: warning: " . a:msg
 endfunction
 
+function! syntastic#util#compressWhitespace(str)
+    return substitute(a:str, '\s\{2,}', ' ', 'g')
+endfunction
+
 let &cpo = s:save_cpo
 unlet s:save_cpo
 " vim: set et sts=4 sw=4:

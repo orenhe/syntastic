@@ -315,6 +315,12 @@ function! SyntasticMake(options)
         call SyntasticAddToErrors(errors, {'subtype': a:options['subtype']})
     endif
 
+    if has_key(a:options, 'compressWhitespace')
+        for error in errors
+            let error['text'] = syntastic#util#compressWhitespace(error['text'])
+        endfor
+    endif
+
     return errors
 endfunction
 

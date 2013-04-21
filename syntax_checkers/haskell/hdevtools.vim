@@ -33,7 +33,7 @@ function! SyntaxCheckers_haskell_hdevtools_GetLocList()
                 \ '%W%>%f:%l:%c:,'.
                 \ '%+C\ \ %#%tarning:\ %m,'
 
-    return SyntasticMake({ 'makeprg': makeprg, 'errorformat': errorformat })
+    SyntasticMake({ 'makeprg': makeprg, 'errorformat': errorformat, 'compressWhitespace': 1 })
 endfunction
 
 call g:SyntasticRegistry.CreateAndRegisterChecker({
