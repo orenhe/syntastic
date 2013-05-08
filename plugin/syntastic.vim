@@ -108,11 +108,16 @@ function! s:UpdateErrors(auto_invoked, ...)
         endif
     end
 
+    let old_loclist = getloclist(0)
+    if !empty(old_loclist) && !SyntasticCheckTag(old_loclist)
+        let w:syntastic_old_loclist = old_loclist
+    endif
+
     let loclist = g:SyntasticLoclist.Current()
     call s:notifiers.refresh(loclist)
 
     if (g:syntastic_always_populate_loc_list || g:syntastic_auto_jump) && loclist.hasErrorsOrWarningsToDisplay()
-        call setloclist(0, loclist.filteredRaw())
+        call setloclist(0, SyntasticAddTag(loclist.filteredRaw()))
         if g:syntastic_auto_jump
             silent! ll
         endif
@@ -215,6 +220,17 @@ function! s:uname()
         let s:uname = system('uname')
     endif
     return s:uname
+endfunction
+
+function! SyntasticAddTag(loclist)
+    return [{'bufnr': bufnr(''), 'text': 'syntastic ' . getpid()}] + a:loclist
+endfunction
+
+function! SyntasticCheckTag(loclist)
+    return !empty(a:loclist) &&
+        \ get(a:loclist[0], 'lnum', 0) == 0 &&
+        \ get(a:loclist[0], 'valid', 0) == 0 &&
+        \ get(a:loclist[0], 'text', '') == 'syntastic ' . getpid()
 endfunction
 
 "return a string representing the state of buffer according to
